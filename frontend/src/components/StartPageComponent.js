@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 
-let id = 12;
+import {socket} from './App'
+
 class StartPageComponent extends Component {
     constructor(props) {
         super(props);
@@ -10,21 +11,30 @@ class StartPageComponent extends Component {
             value: '',
             copied: false,
             link: false,
+            gameUrl: ''
         };
-    }
-    componentWillReceiveProps(nextProps) {
-        let newLink = nextProps.link;
-        this.setState({
-            value: newLink,
-            copied: false,
-            link: false
+
+        this.socket = socket;
+        this.socket.on('start_game', (data)=> {
+            console.log('start');
+            this.setState({gameUrl: data.link})
         });
+    }
+    componentDidMount() {
+
+        socket.on('getLink', (data) => {
+
+            this.setState({ value: data.link });
+
+            socket.emit('login', {userID : 1, roomID : data.gameId} );
+            
+        });
+        
     }
     render() {
         return (
             <div className="start-page-component">
-                <Link to={`/fe435180-2113-11e8-8523-e53d54f63d3e/2`}>dsfs</Link>
-                {this.state.link ? (<Redirect to="/game" />) : (
+                {this.state.link ? (<Redirect to={this.state.gameUrl} />) : (
                     <div>
                         <h1 className="text-center">Hello!</h1>
                         <h3 className="text-center">Share this link to start game!</h3>

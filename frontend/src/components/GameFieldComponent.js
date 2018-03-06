@@ -1,32 +1,33 @@
 import React, { Component } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import MIDISounds from 'midi-sounds-react';
+import {socket} from './App'
 
 const variables = [
   {
     value: 'lizard',
-    imgSrc: 'src/img/lizard.svg'
+    imgSrc: '/src/img/lizard.svg'
   },
   {
     value: 'paper',
-    imgSrc: 'src/img/paper.svg'
+    imgSrc: '/src/img/paper.svg'
   },
   {
     value: 'rock',
-    imgSrc: 'src/img/rock.svg'
+    imgSrc: '/src/img/rock.svg'
   },
   {
     value: 'scissors',
-    imgSrc: 'src/img/scissors.svg'
+    imgSrc: '/src/img/scissors.svg'
   },
   {
     value: 'spock',
-    imgSrc: 'src/img/spock.svg'
+    imgSrc: '/src/img/spock.svg'
   },
 ]
 
 const bg = {
-  backgroundImage: 'url(src/img/field-bg.svg)',
+  backgroundImage: 'url(./src/img/field-bg.svg)',
 };
 
 class GameFieldComponent extends Component {
@@ -41,16 +42,14 @@ class GameFieldComponent extends Component {
   }
   onHandleClick(value) {
     console.log(value);
-    // var data = value;
-    // fetch("<url to where to post>", {
-    //   method: "POST",
-    //   body: 'data'
-    // }).then(this.setState({ fireRedirect: true })) 
     this.setState({ fireRedirect: true })
   }
   componentDidMount(){
-    console.log('GameId', this.props.match.params.id);
-    console.log('UsersId', this.props.match.params.user);
+  
+    if(this.props.match.params.user == 2){
+      console.log('GameId', this.props.match.params.id);
+      socket.emit('login', {userID : 2, roomID : this.props.match.params.id} );
+    }
   }
   render() {
     return (

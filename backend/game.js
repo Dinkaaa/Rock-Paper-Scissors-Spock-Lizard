@@ -4,67 +4,75 @@ const clientHost = 'http://localhost:8080/game/'
 module.exports = function (app, io) {
     var rooms = []; //rooms: {id, user1,user2};
 
-
+    var count = 0;
     var game = io.on('connection', function (client) {
 
+        console.log('Users now: ', ++count);
+
+        client.on('disconnect', function () {
+            // client.broadcast.to(this.roomID).emit("part", { "reason": "user disconnected" });
+            // client.leave(this.roomID);
+            // destroyRoomOnEmpty(client.roomID);
+            console.log('Users now: ', --count);
+        });
         var id = uuidv1();
 
-        client.emit('getLink', { link: clientHost + id + '/2' }, function(){
-            addRoom(id);
-            console.log(rooms)
+        client.emit('getLink', { link: clientHost + id + '/2', gameId: id });
+
+        client.on("login", function (data) {
+
+            client.userID = data.userID;
+            client.roomID = data.roomID;
+
+            if (data.userID == 1) { //if it is the first player( how sent tke link)
+                addRoom(data.roomID);
+                addUserToRoom(data.roomID, 1);
+            }
+            if (data.userID == 2) {
+                if(roomIsFull(data.roomID)){
+                    client.emit('room_is_full', {resonse: 'Error: room is full'});
+                    return false;
+                }else{
+                    addUserToRoom(data.roomID, 2);
+                    client.emit('start_game', { link: clientHost + id + '/1' });
+                }
+            }else{
+                client.emit('user_not_found', {response: 'Error: incorrect user ID'});
+                return false;
+            }
+
         });
     });
 
     function addRoom(roomID) {
         room = new Object();
         room.id = roomID;
+        room.users = [];
         rooms.push(room);
     }
 
-    function removeRoom(roomID) {
+    function addUserToRoom(roomID, userID) {
+        var newUser = {
+            id: userID,
+            move: ''
+        };
+        var roomNumber = findRoom(roomID);
+        rooms[roomNumber].users.push(newUser);
+        console.log(rooms);
+    }
+
+    function findRoom(roomID) {
         for (i = 0; i < rooms.length; i++) {
-            room = rooms[i];
-            if (room.id == roomID) {
-                rooms.splice(i);
+            if (rooms[i].id == roomID) {
+                return i;
             }
         }
     }
 
-    function destroyRoomOnEmpty(roomID) {
-        for (i = 0; i < rooms.length; i++) {
-            room = rooms[i];
-            if (room.id == roomID) {
-                rooms.splice(i);
-                return true;
-            }
+    function roomIsFull(roomID) {
+        if (rooms[findRoom(roomID)].users.length >= 2) {
+            return true
         }
-        return false;
     }
 
-    function isRoomFull(roomID) {//2 users in room
-        room = getRoomByID(roomID);
-        if (!room) {
-            return false;
-        }
-        users = getClientsByRoom(roomID);
-        return (users == 2);
-    }
-
-    function getRoomByID(roomID) {
-        for (i = 0; i < rooms.length; i++) {
-            room = rooms[i];
-            if (room.id == roomID) {
-                return room;
-            }
-        }
-        return null;
-    }
-
-    function isRoomEmpty(roomID) {//0 users in room
-        return (getClientsByRoom(roomID).length == 0);
-    }
-
-    function roomExists(roomID) {//exict room
-        return (getRoomByID(roomID) != null);
-    }
 }

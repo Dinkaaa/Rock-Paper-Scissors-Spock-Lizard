@@ -7,19 +7,11 @@ import GameFieldComponent from './GameFieldComponent';
 import EndRoundComponent from './EndRoundComponent';
 
 const port = 'http://localhost:3000';
-const socket = io.connect(port);
+export let socket = io.connect(port);
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      link: false,
-    };
-  }
-  componentDidMount() {
-    socket.on('getLink', (data) => {
-      this.setState({ link: data.link });
-    });
   }
   render() {
     return (
@@ -30,9 +22,11 @@ class App extends Component {
         <BrowserRouter history={browserHistory} >
           <Switch>
             <Route exact path='/' >
-              <StartPageComponent link={this.state.link} />
+              <StartPageComponent />
             </Route>
-            <Route path='/:id/:user' component={GameFieldComponent} />
+            <Route path='/game/:id/:user' 
+                  component={GameFieldComponent}
+                  onHandleLink={this.onHandleLink}/>
             <Route path='/end' component={EndRoundComponent} />
             <Route render={() => <h1>Page not found</h1>}/>
           </Switch>
