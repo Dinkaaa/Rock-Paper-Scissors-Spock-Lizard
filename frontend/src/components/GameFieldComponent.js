@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import MIDISounds from 'midi-sounds-react';
-import {socket} from './App'
+import { socket } from './App'
 
 const variables = [
   {
@@ -38,23 +38,32 @@ class GameFieldComponent extends Component {
     }
   }
   playSound() {
-      this.midiSounds.playChordNow(1248, [3], 2);
+    this.midiSounds.playChordNow(1248, [3], 2);
   }
   onHandleClick(value) {
     console.log(value);
-    this.setState({ fireRedirect: true })
+    socket.emit('player_move', {
+      gameID: this.props.match.params.id,
+      userID: this.props.match.params.user,
+      value: value
+    });
+    socket.on('move_success',(data)=>{
+      if(data.response){
+        this.setState({ fireRedirect: true });
+      }
+    });
+    
   }
-  componentDidMount(){
-  
-    if(this.props.match.params.user == 2){
+  componentDidMount() {
+    if (this.props.match.params.user == 2) {
       console.log('GameId', this.props.match.params.id);
-      socket.emit('login', {userID : 2, roomID : this.props.match.params.id} );
+      socket.emit('login', { userID: 2, roomID: this.props.match.params.id });
     }
   }
   render() {
     return (
       <div>
-        {this.state.fireRedirect ? (<Redirect to="/end" />) : (
+        {this.state.fireRedirect ? (<Redirect to={`/end/${this.props.match.params.id}/${this.props.match.params.user} `} />) : (
           <div className="game-field-component">
             <div className="game-field" style={{ backgroundImage: 'url(src/img/field-bg.svg)' }}>
               {variables.map((item, index) => {

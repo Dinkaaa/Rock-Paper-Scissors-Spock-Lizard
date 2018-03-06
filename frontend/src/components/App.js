@@ -27,7 +27,7 @@ class App extends Component {
             <Route path='/game/:id/:user' 
                   component={GameFieldComponent}
                   onHandleLink={this.onHandleLink}/>
-            <Route path='/end' component={EndRoundComponent} />
+            <Route path='/end/:id/:user' component={EndRoundComponent} />
             <Route render={() => <h1>Page not found</h1>}/>
           </Switch>
         </BrowserRouter>

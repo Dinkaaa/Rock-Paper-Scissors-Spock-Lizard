@@ -6,7 +6,7 @@ class WinComponent extends Component {
         return (
             <div className="Lose">
                 <div className="Item">
-                <img src="src/img/epic_win.gif" alt="Win"/>
+                <img src="/src/img/epic_win.gif" alt="Win"/>
                     <h3>You Win!</h3>
                 </div>
             </div>

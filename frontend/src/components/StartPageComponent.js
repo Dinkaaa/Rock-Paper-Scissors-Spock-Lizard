@@ -13,15 +13,10 @@ class StartPageComponent extends Component {
             link: false,
             gameUrl: ''
         };
-
-        this.socket = socket;
-        this.socket.on('start_game', (data)=> {
-            console.log('start');
-            this.setState({gameUrl: data.link})
-        });
     }
-    componentDidMount() {
+    componentWillMount() {
 
+       console.log(socket)
         socket.on('getLink', (data) => {
 
             this.setState({ value: data.link });
@@ -29,7 +24,13 @@ class StartPageComponent extends Component {
             socket.emit('login', {userID : 1, roomID : data.gameId} );
             
         });
-        
+        socket.on('start_game', (data)=> {
+            console.log('start');
+            this.setState({
+                link:true,
+                gameUrl: data.link
+            })
+        });
     }
     render() {
         return (
