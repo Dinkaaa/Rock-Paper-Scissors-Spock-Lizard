@@ -21,14 +21,10 @@ class App extends Component {
         </nav>
         <BrowserRouter history={browserHistory} >
           <Switch>
-            <Route exact path='/' >
-              <StartPageComponent />
-            </Route>
-            <Route path='/game/:id/:user' 
-                  component={GameFieldComponent}
-                  onHandleLink={this.onHandleLink}/>
+            <Route exact path='/' component={StartPageComponent} />
+            <Route path='/game/:id/:user' component={GameFieldComponent} />
             <Route path='/end/:id/:user' component={EndRoundComponent} />
-            <Route render={() => <h1>Page not found</h1>}/>
+            <Route render={() => <h1>Page not found</h1>} />
           </Switch>
         </BrowserRouter>
       </div>

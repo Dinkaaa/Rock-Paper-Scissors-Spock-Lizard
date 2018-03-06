@@ -16,7 +16,6 @@ class StartPageComponent extends Component {
     }
     componentWillMount() {
 
-       console.log(socket)
         socket.on('getLink', (data) => {
 
             this.setState({ value: data.link });

@@ -24,11 +24,7 @@ const variables = [
     value: 'spock',
     imgSrc: '/src/img/spock.svg'
   },
-]
-
-const bg = {
-  backgroundImage: 'url(./src/img/field-bg.svg)',
-};
+];
 
 class GameFieldComponent extends Component {
   constructor(props) {
@@ -41,12 +37,13 @@ class GameFieldComponent extends Component {
     this.midiSounds.playChordNow(1248, [3], 2);
   }
   onHandleClick(value) {
-    console.log(value);
+    
     socket.emit('player_move', {
       gameID: this.props.match.params.id,
       userID: this.props.match.params.user,
       value: value
     });
+
     socket.on('move_success',(data)=>{
       if(data.response){
         this.setState({ fireRedirect: true });
@@ -56,7 +53,6 @@ class GameFieldComponent extends Component {
   }
   componentDidMount() {
     if (this.props.match.params.user == 2) {
-      console.log('GameId', this.props.match.params.id);
       socket.emit('login', { userID: 2, roomID: this.props.match.params.id });
     }
   }
@@ -65,7 +61,7 @@ class GameFieldComponent extends Component {
       <div>
         {this.state.fireRedirect ? (<Redirect to={`/end/${this.props.match.params.id}/${this.props.match.params.user} `} />) : (
           <div className="game-field-component">
-            <div className="game-field" style={{ backgroundImage: 'url(src/img/field-bg.svg)' }}>
+            <div className="game-field" style={{ backgroundImage: 'url(/src/img/field-bg.svg)' }}>
               {variables.map((item, index) => {
                 return (
                   <div className="game-variable"

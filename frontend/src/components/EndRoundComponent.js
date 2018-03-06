@@ -21,7 +21,6 @@ class EndRoundComponent extends Component {
 
       if (data.gameID == this.props.match.params.id) {
 
-        console.log('Data Recults', data);
         this.setState({ results: true });
 
         if (result == 'tie') {
