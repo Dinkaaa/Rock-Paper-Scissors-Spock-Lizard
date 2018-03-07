@@ -60,11 +60,10 @@ class GameFieldComponent extends Component {
             socket.emit('login', {roomId: this.props.match.params.id})
         })
     }
-
     render() {
         return (
             <div>
-                {this.state.isError && <Redirect to="/"/>}
+                {this.state.isError && <Redirect to="/pageNotFound"/>}
                 {this.state.isMoveMade && !this.state.result && <LoadingComponent/>}
                 {this.state.result && <EndRoundComponent result={this.state.result}/>}
                 {

@@ -8,7 +8,6 @@ class TieComponent extends Component {
                 <div className="Item">
                     <img src="/src/img/lose.gif" alt="Lose"/>
                     <h3>Its a Tie</h3>
-                    <h4>Try Again!</h4>
                 </div>
             </div>
         )

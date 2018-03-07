@@ -12,21 +12,24 @@ class StartPageComponent extends Component {
             copied: false,
             gameUrl: ''
         };
+        
     }
-
+    componentDidUpdate(){
+        console.log('UPDATE')
+    }
     componentDidMount() {
-        socket.connect()
-
+        socket.connect();
+        
 
         socket.on('connect', () => {
             socket.on('get-link', ({ url }) => {
-                this.setState({ value: `${location.origin}/game/${url}` })
-            })
+                this.setState({ value: `${location.origin}/game/${url}` });
+            });
 
             socket.on('start-game', ({ url }) => {
-                this.setState({ gameUrl: `game/${url}` })
-            })
-        })
+                this.setState({ gameUrl: `game/${url}` });
+            });
+        });
 
     }
 

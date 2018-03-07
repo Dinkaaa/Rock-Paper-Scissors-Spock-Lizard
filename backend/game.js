@@ -31,8 +31,8 @@ module.exports = (app, io) => {
                     socket.to(roomId).emit('game-result', { result: 'tie' });
                 } else {
                     const result = isVictory(results[roomId], value);
-                    socket.emit('game-result', { result: result ? 'win' : 'lose' });
-                    socket.to(roomId).emit('game-result', { result: result ? 'lose' : 'win' });
+                    socket.emit('game-result', { result: result ? 'lose' : 'win' });
+                    socket.to(roomId).emit('game-result', { result: result ? 'win' : 'lose' });
                 }
 
                 delete results[roomId];

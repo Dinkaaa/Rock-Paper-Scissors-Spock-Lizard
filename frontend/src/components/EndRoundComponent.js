@@ -17,9 +17,6 @@ class EndRoundComponent extends Component {
     return (
       <div>
         <EndComponent />
-        <div className="start-new">
-          <Link to='/' className="btn btn-primary">Start new game</Link>
-        </div>
       </div>
     )
   }
