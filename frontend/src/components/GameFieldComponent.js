@@ -5,7 +5,9 @@ import { socket }           from './App'
 import EndRoundComponent    from "./EndRoundComponent";
 import LoadingComponent     from "./LoadingComponent";
 
-const variables = [
+
+//images and names movement in game fiels
+const variables = [ 
     {
         value: 'lizard',
         imgSrc: '/src/img/lizard.svg'
@@ -33,25 +35,32 @@ class GameFieldComponent extends Component {
         super(props);
         this.state = {};
     }
-
-    playSound() {
+    
+    //play sounds on hover
+    playSound() { 
         this.midiSounds.playChordNow(1248, [3], 2);
     }
 
+    //on make move 
+    //value  -  value of the selected movement 
     onHandleClick(value) {
         socket.emit('make-move', {value, roomId: this.props.match.params.id})
         this.setState({isMoveMade: true})
     }
 
     componentDidMount() {
-        console.log('Socket id', socket.id);
+
+        //if API return error redirect to page not found
         socket.on('game-error', () => {
             this.setState({isError: true})
         })
+
+        //if API return a result of game render 'EndRoundComponent' 
         socket.on('game-result', ({result}) => {
             this.setState({result})
         })
 
+        //if second user open the link, login him in relevant room
         if (socket.connected) {
             return socket.emit('login', {roomId: this.props.match.params.id})
         }

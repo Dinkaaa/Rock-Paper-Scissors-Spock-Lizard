@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Redirect } from 'react-router-dom';
 
-import { socket } from './App'
+import { socket } from './App';
 
+// value - value of input
+// copied - check if link is copied
+// gameUrl - id of room (game) 
 class StartPageComponent extends Component {
     constructor(props) {
         super(props);
@@ -14,18 +17,20 @@ class StartPageComponent extends Component {
         };
         
     }
-    componentDidUpdate(){
-        console.log('UPDATE')
-    }
+
+    
     componentDidMount() {
+
+        //connect and get the link, to share with opponent
         socket.connect();
-        
 
         socket.on('connect', () => {
             socket.on('get-link', ({ url }) => {
                 this.setState({ value: `${location.origin}/game/${url}` });
             });
-
+            
+            //if opponet open the link
+            //redirect to game field in relevant room
             socket.on('start-game', ({ url }) => {
                 this.setState({ gameUrl: `game/${url}` });
             });

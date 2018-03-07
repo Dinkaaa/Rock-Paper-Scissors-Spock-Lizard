@@ -6,8 +6,8 @@ import StartPageComponent from './StartPageComponent';
 import GameFieldComponent from './GameFieldComponent';
 import EndRoundComponent from './EndRoundComponent';
 
-const url = 'http://localhost:3000';
-export let socket = io(url);
+const url = 'http://localhost:3000'; //api address
+export let socket = io(url); // new socket
 
 class App extends Component {
   render() {

@@ -4,7 +4,8 @@ import LoseComponent from './LoseComponent';
 import TieComponent from './TieComponent';
 import WinComponent from './WinComponent';
 
-const ResultComponentMap = {
+// object with results and components, which render on this result
+const ResultComponentMap = { 
   'tie': TieComponent,
   'win': WinComponent,
   'lose': LoseComponent,
