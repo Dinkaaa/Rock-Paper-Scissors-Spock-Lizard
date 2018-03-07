@@ -1,61 +1,28 @@
 import React, { Component } from 'react';
-import LoadingComponent from './LoadingComponent';
-import WinComponent from './WinComponent';
+import { Link } from 'react-router-dom';
 import LoseComponent from './LoseComponent';
 import TieComponent from './TieComponent';
-import { Link } from 'react-router-dom';
-import { socket } from './App';
+import WinComponent from './WinComponent';
+
+const ResultComponentMap = {
+  'tie': TieComponent,
+  'win': WinComponent,
+  'lose': LoseComponent,
+}
+
 class EndRoundComponent extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      results: false, //wait for results
-      tie: false,
-      win: true // player win? 
-    }
-  }
-  componentDidMount() {
-    socket.on('game_result', (data) => {
-
-      let result = data.result;
-
-      if (data.gameID == this.props.match.params.id) {
-
-        this.setState({ results: true });
-
-        if (result == 'tie') {
-
-          this.setState({ tie: true });
-
-        } else {
-
-          if (result != this.props.match.params.user) {
-            this.setState({ win: false });
-          }
-        }
-
-      }
-    });
-  }
   render() {
+    const EndComponent = ResultComponentMap[this.props.result]
+
     return (
       <div>
-        {!this.state.results ? (<LoadingComponent />) : (
-          <div>
-            {this.state.tie ? (<TieComponent />) : (
-              <div>
-                {(this.state.win) ? (<WinComponent />) : (<LoseComponent />)}
-              </div>
-            )}
-
-            <div className="start-new">
-              <Link to='/' className="btn btn-primary">Start new game</Link>
-            </div>
-          </div>
-        )}
-
+        <EndComponent />
+        <div className="start-new">
+          <Link to='/' className="btn btn-primary">Start new game</Link>
+        </div>
       </div>
     )
   }
 }
+
 export default EndRoundComponent;

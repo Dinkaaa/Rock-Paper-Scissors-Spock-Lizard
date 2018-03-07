@@ -1,18 +1,15 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Switch, Link, browserHistory } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, browserHistory } from 'react-router-dom';
 import io from 'socket.io-client';
 
 import StartPageComponent from './StartPageComponent';
 import GameFieldComponent from './GameFieldComponent';
 import EndRoundComponent from './EndRoundComponent';
 
-const port = 'http://localhost:3000';
-export let socket = io.connect(port);
+const url = 'http://localhost:3000';
+export let socket = io(url);
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-  }
   render() {
     return (
       <div>
@@ -22,8 +19,7 @@ class App extends Component {
         <BrowserRouter history={browserHistory} >
           <Switch>
             <Route exact path='/' component={StartPageComponent} />
-            <Route path='/game/:id/:user' component={GameFieldComponent} />
-            <Route path='/end/:id/:user' component={EndRoundComponent} />
+            <Route path='/game/:id' component={GameFieldComponent} />
             <Route render={() => <h1>Page not found</h1>} />
           </Switch>
         </BrowserRouter>

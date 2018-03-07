@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
-import {socket} from './App'
+import { socket } from './App'
 
 class StartPageComponent extends Component {
     constructor(props) {
@@ -10,31 +10,30 @@ class StartPageComponent extends Component {
         this.state = {
             value: '',
             copied: false,
-            link: false,
             gameUrl: ''
         };
     }
-    componentWillMount() {
 
-        socket.on('getLink', (data) => {
+    componentDidMount() {
+        socket.connect()
 
-            this.setState({ value: data.link });
 
-            socket.emit('login', {userID : 1, roomID : data.gameId} );
-            
-        });
-        socket.on('start_game', (data)=> {
-            console.log('start');
-            this.setState({
-                link:true,
-                gameUrl: data.link
+        socket.on('connect', () => {
+            socket.on('get-link', ({ url }) => {
+                this.setState({ value: `${location.origin}/game/${url}` })
             })
-        });
+
+            socket.on('start-game', ({ url }) => {
+                this.setState({ gameUrl: `game/${url}` })
+            })
+        })
+
     }
+
     render() {
         return (
             <div className="start-page-component">
-                {this.state.link ? (<Redirect to={this.state.gameUrl} />) : (
+                {this.state.gameUrl ? (<Redirect to={this.state.gameUrl} />) : (
                     <div>
                         <h1 className="text-center">Hello!</h1>
                         <h3 className="text-center">Share this link to start game!</h3>
